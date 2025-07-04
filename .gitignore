@@ -1,0 +1,12 @@
+# 機密情報（環境変数）
+.env
+
+# Pythonキャッシュ
+__pycache__/
+*.pyc
+
+# VSCode設定ファイル（任意）
+.vscode/
+
+# ログファイル（任意）
+*.log
