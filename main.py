@@ -20,11 +20,17 @@ deployment_name = "Botlearn-gpt-4o-mini"
 api_version = "2024-08-01-preview"
 
 # クライアントの初期化
+from openai import AzureOpenAI
+import os
+
 client = AzureOpenAI(
-    azure_endpoint=azure_endpoint,
-    api_key=api_key,
-    api_version=api_version
+    api_version="2025-01-01-preview",
+    azure_endpoint="https://ai-taikyokuen4753ai068260957774.services.ai.azure.com/",
+    api_key=os.getenv("AZURE_API_KEY")
 )
+
+deployment_name = "gpt-4o-mini-assistant"
+
 
 # チャット履歴の初期化（型注釈はコメントで対応）
 if "chat_history" not in st.session_state:
