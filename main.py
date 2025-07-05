@@ -10,15 +10,18 @@ from dotenv import load_dotenv
 import streamlit as st
 import os
 
-# 環境変数の読み込み（ローカル実行時のみ有効）
+# 環境変数の読み込み
 load_dotenv()
 
-# Azure OpenAI 接続情報（環境変数から取得）
+# Azure OpenAI 接続情報
 client = AzureOpenAI(
-    api_version="2025-01-01-preview",
-    azure_endpoint=os.getenv("AZURE_API_ENDPOINT"),
-    api_key=os.getenv("AZURE_API_KEY")
+    api_version=os.getenv("CHATBOT_AZURE_OPENAI_API_VERSION"),
+    azure_endpoint=os.getenv("CHATBOT_AZURE_OPENAI_ENDPOINT"),
+    api_key=os.getenv("CHATBOT_AZURE_OPENAI_API_KEY")
 )
+
+deployment_name = os.getenv("CHATBOT_AZURE_OPENAI_DEPLOYMENT_NAME")
+
 
 deployment_name = "gpt-4o-mini-assistant"
 
