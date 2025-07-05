@@ -23,10 +23,11 @@ client = AzureOpenAI(
 )
 
 deployment_name = os.getenv("CHATBOT_AZURE_OPENAI_DEPLOYMENT_NAME", "")
+assert deployment_name, "環境変数 CHATBOT_AZURE_OPENAI_DEPLOYMENT_NAME が未設定です"
 
 # チャット履歴の初期化
 if "chat_history" not in st.session_state:
-    st.session_state.chat_history: List[ChatCompletionMessageParam] = []
+    st.session_state.chat_history = []
 
 # 応答生成関数
 def get_response(prompt: str) -> str:
