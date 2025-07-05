@@ -2,7 +2,6 @@
 from openai import AzureOpenAI
 from openai.types.chat import (
     ChatCompletionUserMessageParam,
-    ChatCompletionAssistantMessageParam,
     ChatCompletionSystemMessageParam,
     ChatCompletionMessageParam
 )
@@ -13,11 +12,15 @@ import os
 # 環境変数の読み込み
 load_dotenv()
 
-# Azure OpenAI 接続情報
-azure_endpoint = os.environ["CHATBOT_AZURE_OPENAI_ENDPOINT"]
-api_key = os.environ["CHATBOT_AZURE_OPENAI_API_KEY"]
-deployment_name = "Botlearn-gpt-4o-mini"
-api_version = "2024-08-01-preview"
+# Azure OpenAI 接続情報（環境変数を使用）
+client = AzureOpenAI(
+    api_version="2025-01-01-preview",
+    azure_endpoint=os.environ["CHATBOT_AZURE_OPENAI_ENDPOINT"],
+    api_key=os.environ["CHATBOT_AZURE_OPENAI_API_KEY"]
+)
+
+deployment_name = "gpt-4o-mini-assistant"
+
 
 # クライアントの初期化
 from openai import AzureOpenAI
