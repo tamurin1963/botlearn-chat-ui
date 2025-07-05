@@ -39,7 +39,8 @@ def get_response(prompt: str) -> str:
     )
 
     response_stream = client.chat.completions.create(
-        model=deployment_name,
+        model="Botlearn-gpt-4.0-mini",
+        
         messages=[system_message] + st.session_state.chat_history,
         stream=True
     )
