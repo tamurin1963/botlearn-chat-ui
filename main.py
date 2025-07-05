@@ -5,7 +5,7 @@ from openai.types.chat import (
     ChatCompletionSystemMessageParam,
     ChatCompletionAssistantMessageParam,
     ChatCompletionMessageParam,
-    ChatCompletionChunk  # ← 修正済み
+    ChatCompletionChunk
 )
 from dotenv import load_dotenv
 import streamlit as st
@@ -14,24 +14,29 @@ from typing import cast, List
 
 # 環境変数の読み込み
 load_dotenv()
-
-# Azure OpenAI 接続情報（.envに準拠）
 api_version = os.getenv("CHATBOT_AZURE_OPENAI_API_VERSION", "")
 azure_endpoint = os.getenv("CHATBOT_AZURE_OPENAI_ENDPOINT", "")
 api_key = os.getenv("CHATBOT_AZURE_OPENAI_API_KEY", "")
+deployment_name = os.getenv("CHATBOT_AZURE_OPENAI_DEPLOYMENT_NAME", "")
 
+from pathlib import Path
+print("📁 .env exists?", Path(".env").exists())
+print("🔍 raw deployment:", os.environ.get("CHATBOT_AZURE_OPENAI_DEPLOYMENT_NAME"))
+print("🔍 via getenv:", os.getenv("CHATBOT_AZURE_OPENAI_DEPLOYMENT_NAME"))
+
+assert deployment_name, "環境変数 CHATBOT_AZURE_OPENAI_DEPLOYMENT_NAME が未設定です"
+
+# デバッグログ
 print("🔍 api_version:", api_version)
 print("🔍 endpoint:", azure_endpoint)
+print("🔍 deployment_name:", deployment_name)
 
+# Azure OpenAI クライアントの初期化（← これが大事！）
 client = AzureOpenAI(
     api_key=api_key,
     azure_endpoint=azure_endpoint,
     api_version=api_version
 )
-
-
-deployment_name = os.getenv("CHATBOT_AZURE_OPENAI_DEPLOYMENT_NAME", "")
-assert deployment_name, "環境変数 CHATBOT_AZURE_OPENAI_DEPLOYMENT_NAME が未設定です"
 
 # チャット履歴の初期化
 if "chat_history" not in st.session_state:
@@ -48,20 +53,18 @@ def get_response(prompt: str) -> str:
     )
 
     response_stream = client.chat.completions.create(
-        model="Botlearn-gpt-4.0-mini",
-        
+        model=deployment_name,  # ← 環境変数から読み込んだ変数を使用
         messages=[system_message] + st.session_state.chat_history,
         stream=True
     )
 
     full_response = ""
-
     for raw_chunk in response_stream:
         chunk = cast(ChatCompletionChunk, raw_chunk)
         if chunk.choices and chunk.choices[0].delta and chunk.choices[0].delta.content:
             full_response += chunk.choices[0].delta.content
 
-    return full_response  # ✅ forループの外・関数の中にある
+    return full_response
 
 # 応答履歴の追加関数
 def add_history(response: str):
@@ -84,5 +87,4 @@ if prompt:
     with st.chat_message("assistant"):
         response_text = get_response(prompt)
         st.markdown(response_text)
-
-    add_history(response_text)
+        add_history(response_text)
