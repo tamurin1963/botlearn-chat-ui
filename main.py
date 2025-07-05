@@ -16,11 +16,19 @@ from typing import cast, List
 load_dotenv()
 
 # Azure OpenAI 接続情報（.envに準拠）
+api_version = os.getenv("CHATBOT_AZURE_OPENAI_API_VERSION", "")
+azure_endpoint = os.getenv("CHATBOT_AZURE_OPENAI_ENDPOINT", "")
+api_key = os.getenv("CHATBOT_AZURE_OPENAI_API_KEY", "")
+
+print("🔍 api_version:", api_version)
+print("🔍 endpoint:", azure_endpoint)
+
 client = AzureOpenAI(
-    api_version=os.getenv("CHATBOT_AZURE_OPENAI_API_VERSION", ""),
-    azure_endpoint=os.getenv("CHATBOT_AZURE_OPENAI_ENDPOINT", ""),
-    api_key=os.getenv("CHATBOT_AZURE_OPENAI_API_KEY", "")
+    api_key=api_key,
+    azure_endpoint=azure_endpoint,
+    api_version=api_version
 )
+
 
 deployment_name = os.getenv("CHATBOT_AZURE_OPENAI_DEPLOYMENT_NAME", "")
 assert deployment_name, "環境変数 CHATBOT_AZURE_OPENAI_DEPLOYMENT_NAME が未設定です"
