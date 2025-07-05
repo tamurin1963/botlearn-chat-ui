@@ -44,14 +44,14 @@ def get_response(prompt: str) -> str:
         stream=True
     )
 
-    full_response = ""  # ← 明示的に定義！
+    full_response = ""
 
     for raw_chunk in response_stream:
         chunk = cast(ChatCompletionChunk, raw_chunk)
         if chunk.choices and chunk.choices[0].delta and chunk.choices[0].delta.content:
             full_response += chunk.choices[0].delta.content
 
-    return full_response  # ← returnをループの外へ！
+    return full_response  # ✅ forループの外・関数の中にある
 
 # 応答履歴の追加関数
 def add_history(response: str):
